@@ -1,3 +1,5 @@
+// empty commit for history
+
 import type { Metadata } from "next";
 import { Geist_Mono, Montserrat } from "next/font/google";
 import "../../styles/globals.css";
@@ -27,7 +29,9 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col">{children}</body>
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }
