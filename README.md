@@ -37,3 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 # fe-z-academy-5.0
 # fe-z-academy-5.0
 # fe-z-academy-5.0-only-ui
+# fe-z-academy-5.0-only-ui
