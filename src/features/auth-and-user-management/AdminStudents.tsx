@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import PageFlexCol from "@/components/PageFlexCol";
 import PageHeader from "@/components/PageHeader";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import AppSearchBar from "@/components/AppSearchBar";
 import TableImage from "@/components/TableImage";
 import { Badge } from "@/components/ui/badge";
@@ -41,57 +41,67 @@ const AdminStudents = () => {
           </div>
         }
         data={filteredStudents}
-        columns={[
-          {
-            key: "avatar",
-            label: "Avatar",
-            render: (value: string | null, row: { fullName: string }) => (
-              <TableImage
-                src={
-                  value ||
-                  `https://ui-avatars.com/api/?name=${encodeURIComponent(row.fullName)}&background=random`
-                }
-                alt={row.fullName}
-                shape="circle"
-              />
-            ),
-          },
-          {
-            key: "fullName",
-            label: "Full Name",
-            render: (value: string) => (
-              <span className="font-medium">{value}</span>
-            ),
-          },
-          {
-            key: "email",
-            label: "Email",
-          },
-          {
-            key: "isVerified",
-            label: "Verified",
-            render: (value: boolean) => (
-              <>
-                {value ? (
-                  <Badge>Verified</Badge>
-                ) : (
-                  <Badge variant="destructive">Not Verified</Badge>
-                )}
-              </>
-            ),
-          },
-          {
-            key: "action",
-            label: "Action",
-            render: (_: unknown, row: { _id: string }) => (
-              <div className="text-right">
-                <AppButton onClick={() => router.push(`/user-profile/${row._id}`)}>
-                  View Profile
-                </AppButton>
-              </div>
-            ),
-          },
-        ]}
+        columns={
+          [
+            {
+              key: "avatar",
+              label: "Avatar",
+              render: (value, row) => {
+                const student = row as { fullName: string };
+                return (
+                  <TableImage
+                    src={
+                      (value as string | null) ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(student.fullName)}&background=random`
+                    }
+                    alt={student.fullName}
+                    shape="circle"
+                  />
+                );
+              },
+            },
+            {
+              key: "fullName",
+              label: "Full Name",
+              render: (value) => (
+                <span className="font-medium">{value as string}</span>
+              ),
+            },
+            {
+              key: "email",
+              label: "Email",
+            },
+            {
+              key: "isVerified",
+              label: "Verified",
+              render: (value) => (
+                <>
+                  {value ? (
+                    <Badge>Verified</Badge>
+                  ) : (
+                    <Badge variant="destructive">Not Verified</Badge>
+                  )}
+                </>
+              ),
+            },
+            {
+              key: "action",
+              label: "Action",
+              render: (_value, row) => {
+                const student = row as { _id: string };
+                return (
+                  <div className="text-right">
+                    <AppButton
+                      onClick={() => router.push(`/user-profile/${student._id}`)}
+                    >
+                      View Profile
+                    </AppButton>
+                  </div>
+                );
+              },
+            },
+          ] satisfies Column[]
+        }
         pagination={true}
       />
     </PageFlexCol>
