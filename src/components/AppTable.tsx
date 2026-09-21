@@ -12,11 +12,15 @@ import {
 
 import { Button } from "@/components/ui/button";
 
+export interface Column {
+  key: string;
+  label: string;
+  render?: (value: unknown, row: unknown) => ReactNode;
+}
+
 interface AppTableProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  columns?: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any[];
+  columns?: Column[];
+  data?: unknown[];
   upperHeader?: ReactNode;
   pagination?: boolean;
 }
@@ -47,17 +51,20 @@ const AppTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                {columns.map((col) => (
-                  <TableCell key={col.key} className="p-4">
-                    {col.render
-                      ? col.render(row?.[col.key], row)
-                      : row?.[col.key]}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {data.map((row, rowIndex) => {
+              const record = row as Record<string, unknown>;
+              return (
+                <TableRow key={rowIndex}>
+                  {columns.map((col) => (
+                    <TableCell key={col.key} className="p-4">
+                      {col.render
+                        ? col.render(record?.[col.key], record)
+                        : (record?.[col.key] as ReactNode)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
