@@ -12,7 +12,7 @@ import TableImage from "@/components/TableImage";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 
 const data = [
   {
@@ -75,67 +75,73 @@ const AllInstructors = () => {
           </div>
         }
         data={filteredData}
-        columns={[
-          {
-            key: "avatar",
-            label: "Avatar",
-            render: (value: string, row: { fullName: string }) => (
-              <TableImage src={value} alt={row.fullName} shape="circle" />
-            ),
-          },
-          {
-            key: "fullName",
-            label: "Full Name",
-            render: (value: string) => (
-              <span className="font-medium">{value}</span>
-            ),
-          },
-          {
-            key: "email",
-            label: "Email",
-          },
-          {
-            key: "highestEducation",
-            label: "Highest Education",
-          },
-          {
-            key: "yearsOfExperience",
-            label: "Experience",
-            render: (value: number) => `${value} Years`,
-          },
-          {
-            key: "isVerified",
-            label: "Verified",
-            render: (value: boolean) => (
-              <>
-                {!value && <Badge variant="destructive">Not verified</Badge>}
-                {value && <Badge>Verified</Badge>}
-              </>
-            ),
-          },
-          {
-            key: "role",
-            label: "Role",
-            render: (value: string) => (
-              <span className="capitalize">{value}</span>
-            ),
-          },
-          {
-            key: "action",
-            label: "Action",
-            render: (_: unknown, row: { _id: string }) => (
-              <div className="text-right">
-                <AppButton
-                  onClick={() =>
-                    router.push("/admin/instructors/instructor-details/1")
-                  }
-                >
-                  View
-                </AppButton>
-              </div>
-            ),
-          },
-        ]}
+        columns={
+          [
+            {
+              key: "avatar",
+              label: "Avatar",
+              render: (value, row) => (
+                <TableImage
+                  src={value as string}
+                  alt={(row as { fullName: string }).fullName}
+                  shape="circle"
+                />
+              ),
+            },
+            {
+              key: "fullName",
+              label: "Full Name",
+              render: (value) => (
+                <span className="font-medium">{value as string}</span>
+              ),
+            },
+            {
+              key: "email",
+              label: "Email",
+            },
+            {
+              key: "highestEducation",
+              label: "Highest Education",
+            },
+            {
+              key: "yearsOfExperience",
+              label: "Experience",
+              render: (value) => `${value as number} Years`,
+            },
+            {
+              key: "isVerified",
+              label: "Verified",
+              render: (value) => (
+                <>
+                  {!value && <Badge variant="destructive">Not verified</Badge>}
+                  {value && <Badge>Verified</Badge>}
+                </>
+              ),
+            },
+            {
+              key: "role",
+              label: "Role",
+              render: (value) => (
+                <span className="capitalize">{value as string}</span>
+              ),
+            },
+            {
+              key: "action",
+              label: "Action",
+              render: (_value, _row) => (
+                <div className="text-right">
+                  <AppButton
+                    onClick={() =>
+                      router.push("/admin/instructors/instructor-details/1")
+                    }
+                  >
+                    View
+                  </AppButton>
+                </div>
+              ),
+            },
+          ] satisfies Column[]
+        }
         pagination={true}
       />
     </PageFlexCol>

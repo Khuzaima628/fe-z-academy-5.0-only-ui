@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import AppSearchBar from "@/components/AppSearchBar";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import PageFlexCol from "@/components/PageFlexCol";
 import PageHeader from "@/components/PageHeader";
 import TableImage from "@/components/TableImage";
@@ -63,76 +63,88 @@ const PendingVerificationCourses = () => {
           </div>
         }
         data={filteredCourses}
-        columns={[
-          {
-            key: "thumbnail",
-            label: "Thumbnail",
-            render: (value: string, row: CourseRecord) => (
-              <TableImage src={value} alt={row.title} shape="rectangle" />
-            ),
-          },
-          {
-            key: "title",
-            label: "Title",
-            render: (value: string) => (
-              <span className="font-medium">{value}</span>
-            ),
-          },
-          {
-            key: "instructorName",
-            label: "Instructor",
-          },
-          {
-            key: "price",
-            label: "Price",
-            render: (value: number) => `$${value}`,
-          },
-          {
-            key: "level",
-            label: "Level",
-            render: (value: string) => formatCourseLevel(value),
-          },
-          {
-            key: "categoryName",
-            label: "Category",
-          },
-          {
-            key: "isVerified",
-            label: "Verified",
-            render: (_: boolean, row: CourseRecord) => (
-              <>
-                {row.isVerified === false && (
-                  <Badge variant="destructive">Not verified</Badge>
-                )}
-                {row.isVerified && <Badge>Verified</Badge>}
-              </>
-            ),
-          },
-          {
-            key: "verificationRejectionReason",
-            label: "Verification Rejection Reason",
-            render: (value: string | null) => (
-              <span title={value ?? "No rejection reason yet"}>
-                {value
-                  ? truncateText(value, TRUNCATE_REASON_AT)
-                  : "Not reviewed yet"}
-              </span>
-            ),
-          },
-          {
-            key: "action",
-            label: "Action",
-            render: (_: unknown, row: CourseRecord) => (
-              <AppButton asChild>
-                <Link
-                  href={`/course-details/${row._id}?role=admin&review=true`}
-                >
-                  View Details
-                </Link>
-              </AppButton>
-            ),
-          },
-        ]}
+        columns={
+          [
+            {
+              key: "thumbnail",
+              label: "Thumbnail",
+              render: (value, row) => (
+                <TableImage
+                  src={value as string}
+                  alt={(row as CourseRecord).title}
+                  shape="rectangle"
+                />
+              ),
+            },
+            {
+              key: "title",
+              label: "Title",
+              render: (value) => (
+                <span className="font-medium">{value as string}</span>
+              ),
+            },
+            {
+              key: "instructorName",
+              label: "Instructor",
+            },
+            {
+              key: "price",
+              label: "Price",
+              render: (value) => `$${value as number}`,
+            },
+            {
+              key: "level",
+              label: "Level",
+              render: (value) => formatCourseLevel(value as string),
+            },
+            {
+              key: "categoryName",
+              label: "Category",
+            },
+            {
+              key: "isVerified",
+              label: "Verified",
+              render: (_value, row) => {
+                const course = row as CourseRecord;
+                return (
+                  <>
+                    {course.isVerified === false && (
+                      <Badge variant="destructive">Not verified</Badge>
+                    )}
+                    {course.isVerified && <Badge>Verified</Badge>}
+                  </>
+                );
+              },
+            },
+            {
+              key: "verificationRejectionReason",
+              label: "Verification Rejection Reason",
+              render: (value) => {
+                const reason = value as string | null;
+                return (
+                  <span title={reason ?? "No rejection reason yet"}>
+                    {reason
+                      ? truncateText(reason, TRUNCATE_REASON_AT)
+                      : "Not reviewed yet"}
+                  </span>
+                );
+              },
+            },
+            {
+              key: "action",
+              label: "Action",
+              render: (_value, row) => (
+                <AppButton asChild>
+                  <Link
+                    href={`/course-details/${(row as CourseRecord)._id}?role=admin&review=true`}
+                  >
+                    View Details
+                  </Link>
+                </AppButton>
+              ),
+            },
+          ] satisfies Column[]
+        }
         pagination={true}
       />
     </PageFlexCol>

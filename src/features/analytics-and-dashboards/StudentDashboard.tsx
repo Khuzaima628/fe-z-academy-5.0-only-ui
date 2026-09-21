@@ -3,7 +3,7 @@
 import React from "react";
 import PageFlexCol from "@/components/PageFlexCol";
 import StatCard from "@/components/StatCard";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import CourseCard from "@/components/CourseCard";
 import { Badge } from "@/components/ui/badge";
 import AppButton from "@/components/AppButton";
@@ -129,39 +129,44 @@ const RECENT_ACTIVITY = [
 ];
 
 const StudentDashboard = () => {
-  const activityColumns = [
+  const activityColumns: Column[] = [
     {
       key: "type",
       label: "Activity",
-      render: (val: string) => (
-        <Badge
-          variant={
-            val === "Certificate Earned"
-              ? "default"
-              : val === "Course Enrolled"
-                ? "secondary"
-                : "outline"
-          }
-          className={
-            val === "Certificate Earned"
-              ? "bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20"
-              : ""
-          }
-        >
-          {val}
-        </Badge>
-      ),
+      render: (value) => {
+        const val = value as string;
+        return (
+          <Badge
+            variant={
+              val === "Certificate Earned"
+                ? "default"
+                : val === "Course Enrolled"
+                  ? "secondary"
+                  : "outline"
+            }
+            className={
+              val === "Certificate Earned"
+                ? "bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20"
+                : ""
+            }
+          >
+            {val}
+          </Badge>
+        );
+      },
     },
     {
       key: "title",
       label: "Details",
-      render: (val: string) => <span className="font-medium">{val}</span>,
+      render: (value) => (
+        <span className="font-medium">{value as string}</span>
+      ),
     },
     {
       key: "course",
       label: "Course",
-      render: (val: string) => (
-        <span className="text-muted-foreground">{val}</span>
+      render: (value) => (
+        <span className="text-muted-foreground">{value as string}</span>
       ),
     },
     { key: "date", label: "Time" },

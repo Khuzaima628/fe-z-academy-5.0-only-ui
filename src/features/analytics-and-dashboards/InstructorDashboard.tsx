@@ -3,7 +3,7 @@
 import React from "react";
 import PageFlexCol from "@/components/PageFlexCol";
 import StatCard from "@/components/StatCard";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -163,75 +163,87 @@ const ENROLLMENTS_CONFIG = {
 } satisfies ChartConfig;
 
 const InstructorDashboard = () => {
-  const courseColumns = [
+  const courseColumns: Column[] = [
     {
       key: "title",
       label: "Course Title",
-      render: (val: string, row: any) => (
-        <div>
-          <div className="font-medium">{val}</div>
-          <Badge
-            variant={row.status === "Live" ? "default" : "secondary"}
-            className={
-              row.status === "Live"
-                ? "bg-green-500/10 text-green-600 hover:bg-green-500/20 mt-1"
-                : "mt-1"
-            }
-          >
-            {row.status}
-          </Badge>
-        </div>
-      ),
+      render: (value, row) => {
+        const val = value as string;
+        const status = (row as { status: string }).status;
+        return (
+          <div>
+            <div className="font-medium">{val}</div>
+            <Badge
+              variant={status === "Live" ? "default" : "secondary"}
+              className={
+                status === "Live"
+                  ? "bg-green-500/10 text-green-600 hover:bg-green-500/20 mt-1"
+                  : "mt-1"
+              }
+            >
+              {status}
+            </Badge>
+          </div>
+        );
+      },
     },
     { key: "enrollments", label: "Enrollments" },
     {
       key: "rating",
       label: "Rating",
-      render: (val: number) =>
-        val > 0 ? (
+      render: (value) => {
+        const val = value as number;
+        return val > 0 ? (
           <span className="text-yellow-500 font-medium">★ {val}</span>
         ) : (
           <span className="text-muted-foreground">-</span>
-        ),
+        );
+      },
     },
     {
       key: "completionRate",
       label: "Avg. Completion",
-      render: (val: number) => (
-        <div className="w-[100px]">
-          <div className="text-xs text-muted-foreground mb-1">{val}%</div>
-          <Progress value={val} className="h-1.5" />
-        </div>
-      ),
+      render: (value) => {
+        const val = value as number;
+        return (
+          <div className="w-[100px]">
+            <div className="text-xs text-muted-foreground mb-1">{val}%</div>
+            <Progress value={val} className="h-1.5" />
+          </div>
+        );
+      },
     },
     {
       key: "revenue",
       label: "Revenue",
-      render: (val: string) => (
-        <span className="font-semibold text-green-600">{val}</span>
+      render: (value) => (
+        <span className="font-semibold text-green-600">{value as string}</span>
       ),
     },
   ];
 
-  const reviewColumns = [
+  const reviewColumns: Column[] = [
     { key: "course", label: "Course" },
     { key: "student", label: "Student" },
     {
       key: "rating",
       label: "Rating",
-      render: (val: number) => (
-        <span className="text-yellow-500 font-medium">
-          {"★".repeat(val)}
-          {"☆".repeat(5 - val)}
-        </span>
-      ),
+      render: (value) => {
+        const val = value as number;
+        return (
+          <span className="text-yellow-500 font-medium">
+            {"★".repeat(val)}
+            {"☆".repeat(5 - val)}
+          </span>
+        );
+      },
     },
     {
       key: "comment",
       label: "Review",
-      render: (val: string) => (
+      render: (value) => (
         <span className="text-muted-foreground italic line-clamp-1 max-w-[300px]">
-          "{val}"
+          "{value as string}"
         </span>
       ),
     },

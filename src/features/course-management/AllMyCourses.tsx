@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import AppSearchBar from "@/components/AppSearchBar";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import PageFlexCol from "@/components/PageFlexCol";
 import PageHeader from "@/components/PageHeader";
 import TableImage from "@/components/TableImage";
@@ -60,72 +60,81 @@ const AllMyCourses = () => {
           </div>
         }
         data={filteredCourses}
-        columns={[
-          {
-            key: "thumbnail",
-            label: "Thumbnail",
-            render: (value: string, row: CourseRecord) => (
-              <TableImage src={value} alt={row.title} shape="rectangle" />
-            ),
-          },
-          {
-            key: "title",
-            label: "Title",
-            render: (value: string) => (
-              <span className="font-medium">{value}</span>
-            ),
-          },
-          {
-            key: "price",
-            label: "Price",
-            render: (value: number) => `$${value}`,
-          },
-          {
-            key: "level",
-            label: "Level",
-            render: (value: string) => formatCourseLevel(value),
-          },
-          {
-            key: "categoryName",
-            label: "Category",
-          },
-          {
-            key: "isVerified",
-            label: "Verification",
-            render: (value: boolean, row: CourseRecord) => (
-              <>
-                {row.isVerified === false && (
-                  <Badge variant="destructive">Not verified</Badge>
-                )}
-                {row.isVerified && <Badge>Verified</Badge>}
-              </>
-            ),
-          },
-          {
-            key: "averageRating",
-            label: "Average Rating",
-            render: (value: number) => value.toFixed(1),
-          },
-          {
-            key: "totalReviews",
-            label: "Total Reviews",
-          },
-          {
-            key: "totalStudentsEnrolled",
-            label: "Students Enrolled",
-          },
-          {
-            key: "action",
-            label: "Action",
-            render: (_: unknown, row: CourseRecord) => (
-              <AppButton asChild>
-                <Link href={`/course-details/${row._id}?role=instructor`}>
-                  View Details
-                </Link>
-              </AppButton>
-            ),
-          },
-        ]}
+        columns={
+          [
+            {
+              key: "thumbnail",
+              label: "Thumbnail",
+              render: (value, row) => (
+                <TableImage
+                  src={value as string}
+                  alt={(row as CourseRecord).title}
+                  shape="rectangle"
+                />
+              ),
+            },
+            {
+              key: "title",
+              label: "Title",
+              render: (value) => (
+                <span className="font-medium">{value as string}</span>
+              ),
+            },
+            {
+              key: "price",
+              label: "Price",
+              render: (value) => `$${value as number}`,
+            },
+            {
+              key: "level",
+              label: "Level",
+              render: (value) => formatCourseLevel(value as string),
+            },
+            {
+              key: "categoryName",
+              label: "Category",
+            },
+            {
+              key: "isVerified",
+              label: "Verification",
+              render: (_value, row) => {
+                const course = row as CourseRecord;
+                return (
+                  <>
+                    {course.isVerified === false && (
+                      <Badge variant="destructive">Not verified</Badge>
+                    )}
+                    {course.isVerified && <Badge>Verified</Badge>}
+                  </>
+                );
+              },
+            },
+            {
+              key: "averageRating",
+              label: "Average Rating",
+              render: (value) => (value as number).toFixed(1),
+            },
+            {
+              key: "totalReviews",
+              label: "Total Reviews",
+            },
+            {
+              key: "totalStudentsEnrolled",
+              label: "Students Enrolled",
+            },
+            {
+              key: "action",
+              label: "Action",
+              render: (_value, row) => (
+                <AppButton asChild>
+                  <Link href={`/course-details/${(row as CourseRecord)._id}?role=instructor`}>
+                    View Details
+                  </Link>
+                </AppButton>
+              ),
+            },
+          ] satisfies Column[]
+        }
         pagination={true}
       />
     </PageFlexCol>
