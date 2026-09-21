@@ -15,7 +15,7 @@ import AppButton from "@/components/AppButton";
 import PageFlexCol from "@/components/PageFlexCol";
 import AppSearchBar from "@/components/AppSearchBar";
 import PageHeader from "@/components/PageHeader";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import TableImage from "@/components/TableImage";
 import { formatDate } from "@/utils/time";
 import { Category as ICategory } from "@/types/categoryTypes";
@@ -161,50 +161,60 @@ const AdminCategories = () => {
             </div>
           }
           data={filteredData}
-          columns={[
-            {
-              key: "image",
-              label: "Image",
-              render: (value: string | null, row: ICategory) => (
-                <TableImage src={value} alt={row.name} shape="rectangle" />
-              ),
-            },
-            {
-              key: "name",
-              label: "Name",
-              render: (value: string) => (
-                <span className="font-medium">{value}</span>
-              ),
-            },
-            {
-              key: "description",
-              label: "Description",
-              render: (value: string | null) =>
-                value ? (
-                  <span className="block max-w-md truncate" title={value}>
-                    {value}
-                  </span>
-                ) : (
-                  "No description"
+          columns={
+            [
+              {
+                key: "image",
+                label: "Image",
+                render: (value, row) => (
+                  <TableImage
+                    src={value as string | null}
+                    alt={(row as ICategory).name}
+                    shape="rectangle"
+                  />
                 ),
-            },
-            {
-              key: "createdAt",
-              label: "Created At",
-              render: (value: string) => formatDate(value),
-            },
-            {
-              key: "action",
-              label: "Action",
-              render: (_: unknown, row: ICategory) => (
-                <div className="text-right">
-                  <AppButton onClick={() => handleOpenCategoryDetails(row)}>
-                    View
-                  </AppButton>
-                </div>
-              ),
-            },
-          ]}
+              },
+              {
+                key: "name",
+                label: "Name",
+                render: (value) => (
+                  <span className="font-medium">{value as string}</span>
+                ),
+              },
+              {
+                key: "description",
+                label: "Description",
+                render: (value) => {
+                  const description = value as string | null;
+                  return description ? (
+                    <span className="block max-w-md truncate" title={description}>
+                      {description}
+                    </span>
+                  ) : (
+                    "No description"
+                  );
+                },
+              },
+              {
+                key: "createdAt",
+                label: "Created At",
+                render: (value) => formatDate(value as string),
+              },
+              {
+                key: "action",
+                label: "Action",
+                render: (_value, row) => (
+                  <div className="text-right">
+                    <AppButton
+                      onClick={() => handleOpenCategoryDetails(row as ICategory)}
+                    >
+                      View
+                    </AppButton>
+                  </div>
+                ),
+              },
+            ] satisfies Column[]
+          }
           pagination={true}
         />
       </PageFlexCol>

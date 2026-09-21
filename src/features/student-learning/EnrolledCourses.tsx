@@ -4,7 +4,7 @@
 import { useState } from "react";
 
 import AppSearchBar from "@/components/AppSearchBar";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import PageFlexCol from "@/components/PageFlexCol";
 import PageHeader from "@/components/PageHeader";
 import TableImage from "@/components/TableImage";
@@ -46,39 +46,47 @@ const EnrolledCourses = () => {
           </div>
         }
         data={filteredCourses}
-        columns={[
-          {
-            key: "thumbnail",
-            label: "Thumbnail",
-            render: (value: string, row: CourseRecord) => (
-              <TableImage src={value} alt={row.title} shape="rectangle" />
-            ),
-          },
-          {
-            key: "title",
-            label: "Title",
-            render: (value: string) => (
-              <span className="font-medium">{value}</span>
-            ),
-          },
-          {
-            key: "instructorName",
-            label: "Instructor",
-          },
-          {
-            key: "categoryName",
-            label: "Category",
-          },
-          {
-            key: "action",
-            label: "Action",
-            render: (_: unknown, row: CourseRecord) => (
-              <AppButton href={`/course-details/${row._id}?role=student&source=enrolled`}>
-                View Details
-              </AppButton>
-            ),
-          },
-        ]}
+        columns={
+          [
+            {
+              key: "thumbnail",
+              label: "Thumbnail",
+              render: (value, row) => (
+                <TableImage
+                  src={value as string}
+                  alt={(row as CourseRecord).title}
+                  shape="rectangle"
+                />
+              ),
+            },
+            {
+              key: "title",
+              label: "Title",
+              render: (value) => (
+                <span className="font-medium">{value as string}</span>
+              ),
+            },
+            {
+              key: "instructorName",
+              label: "Instructor",
+            },
+            {
+              key: "categoryName",
+              label: "Category",
+            },
+            {
+              key: "action",
+              label: "Action",
+              render: (_value, row) => (
+                <AppButton
+                  href={`/course-details/${(row as CourseRecord)._id}?role=student&source=enrolled`}
+                >
+                  View Details
+                </AppButton>
+              ),
+            },
+          ] satisfies Column[]
+        }
         pagination={true}
       />
     </PageFlexCol>

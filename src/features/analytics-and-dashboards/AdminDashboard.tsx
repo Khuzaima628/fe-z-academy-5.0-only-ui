@@ -3,7 +3,7 @@
 import React from "react";
 import PageFlexCol from "@/components/PageFlexCol";
 import StatCard from "@/components/StatCard";
-import AppTable from "@/components/AppTable";
+import AppTable, { type Column } from "@/components/AppTable";
 import { Badge } from "@/components/ui/badge";
 import {
   DollarSign,
@@ -184,59 +184,65 @@ const USER_CONFIG = {
 } satisfies ChartConfig;
 
 const AdminDashboard = () => {
-  const userColumns = [
+  const userColumns: Column[] = [
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     {
       key: "role",
       label: "Role",
-      render: (val: string) => (
-        <Badge variant={val === "Instructor" ? "default" : "secondary"}>
-          {val}
-        </Badge>
-      ),
+      render: (value) => {
+        const val = value as string;
+        return (
+          <Badge variant={val === "Instructor" ? "default" : "secondary"}>
+            {val}
+          </Badge>
+        );
+      },
     },
     {
       key: "status",
       label: "Status",
-      render: (val: string) => (
-        <Badge
-          variant={
-            val === "Active"
-              ? "default"
-              : val === "Pending"
-                ? "outline"
-                : "destructive"
-          }
-          className={
-            val === "Active"
-              ? "bg-green-500/10 text-green-500 hover:bg-green-500/20"
-              : ""
-          }
-        >
-          {val}
-        </Badge>
-      ),
+      render: (value) => {
+        const val = value as string;
+        return (
+          <Badge
+            variant={
+              val === "Active"
+                ? "default"
+                : val === "Pending"
+                  ? "outline"
+                  : "destructive"
+            }
+            className={
+              val === "Active"
+                ? "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+                : ""
+            }
+          >
+            {val}
+          </Badge>
+        );
+      },
     },
     { key: "joinedAt", label: "Joined" },
   ];
 
-  const courseColumns = [
+  const courseColumns: Column[] = [
     { key: "title", label: "Course Title" },
     { key: "instructor", label: "Instructor" },
     { key: "enrollments", label: "Enrollments" },
     {
       key: "rating",
       label: "Rating",
-      render: (val: number) => (
-        <span className="text-yellow-500 font-medium">★ {val}</span>
+      render: (value) => (
+        <span className="text-yellow-500 font-medium">★ {value as number}</span>
       ),
     },
     {
       key: "revenue",
       label: "Revenue Generated",
-      render: (val: string) => (
-        <span className="font-semibold text-green-600">{val}</span>
+      render: (value) => (
+        <span className="font-semibold text-green-600">{value as string}</span>
       ),
     },
   ];
